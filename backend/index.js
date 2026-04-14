@@ -16,7 +16,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://job-khojo-delta.vercel.app"
+    "https://job-khojo-delta.vercel.app",
+    "https://job-khojo-git-main-sneh-011s-projects.vercel.app"
   ],
   credentials: true
 }));
