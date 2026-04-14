@@ -11,7 +11,7 @@ const fitlerData = [
     },
     {
         fitlerType: "Industry",
-        array: ["Frontend Developer", "Backend Developer", "FullStack Developer"]
+        array: ["Frontend Developer", "Backend Developer", "Full Stack Developer", "Data Science", "DevOps"]
     },
     {
         fitlerType: "Salary",
@@ -22,26 +22,41 @@ const fitlerData = [
 const FilterCard = () => {
     const [selectedValue, setSelectedValue] = useState('');
     const dispatch = useDispatch();
+
     const changeHandler = (value) => {
-        setSelectedValue(value);
+        // clicking same value again clears the filter
+        const newValue = value === selectedValue ? '' : value;
+        setSelectedValue(newValue);
     }
-    useEffect(()=>{
+
+    useEffect(() => {
         dispatch(setSearchedQuery(selectedValue));
-    },[selectedValue]);
+    }, [selectedValue]);
+
     return (
         <div className='w-full bg-white p-3 rounded-md'>
-            <h1 className='font-bold text-lg'>Filter Jobs</h1>
+            <div className='flex items-center justify-between'>
+                <h1 className='font-bold text-lg'>Filter Jobs</h1>
+                {selectedValue && (
+                    <button
+                        onClick={() => setSelectedValue('')}
+                        className='text-xs text-[#6A38C2] hover:underline'
+                    >
+                        Clear
+                    </button>
+                )}
+            </div>
             <hr className='mt-3' />
             <RadioGroup value={selectedValue} onValueChange={changeHandler}>
                 {
                     fitlerData.map((data, index) => (
-                        <div>
-                            <h1 className='font-bold text-lg'>{data.fitlerType}</h1>
+                        <div key={index}>
+                            <h1 className='font-bold text-lg mt-2'>{data.fitlerType}</h1>
                             {
                                 data.array.map((item, idx) => {
                                     const itemId = `id${index}-${idx}`
                                     return (
-                                        <div className='flex items-center space-x-2 my-2'>
+                                        <div key={itemId} className='flex items-center space-x-2 my-2'>
                                             <RadioGroupItem value={item} id={itemId} />
                                             <Label htmlFor={itemId}>{item}</Label>
                                         </div>

@@ -12,8 +12,6 @@ const Jobs = () => {
     useEffect(() => {
         if (searchedQuery) {
             const query = searchedQuery.toLowerCase();
-
-            // check if it's a salary range filter like "6-10 LPA" or "20+ LPA"
             const salaryRange = searchedQuery.match(/^(\d+)-(\d+)\s*lpa$/i);
             const salaryAbove = searchedQuery.match(/^(\d+)\+\s*lpa$/i);
 
