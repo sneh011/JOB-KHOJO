@@ -14,11 +14,7 @@ const app = express();
 
 // 🔥 CORS FIRST (IMPORTANT)
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://job-khojo-delta.vercel.app",
-    "https://job-khojo-git-main-sneh-011s-projects.vercel.app"
-  ],
+  origin: true,
   credentials: true
 }));
 // middleware
