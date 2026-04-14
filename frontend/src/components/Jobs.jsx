@@ -11,11 +11,28 @@ const Jobs = () => {
 
     useEffect(() => {
         if (searchedQuery) {
-            const filteredJobs = allJobs.filter((job) =>
-                job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                job.location.toLowerCase().includes(searchedQuery.toLowerCase())
-            );
+            const query = searchedQuery.toLowerCase();
+
+            // check if it's a salary range filter like "6-10 LPA" or "20+ LPA"
+            const salaryRange = searchedQuery.match(/^(\d+)-(\d+)\s*lpa$/i);
+            const salaryAbove = searchedQuery.match(/^(\d+)\+\s*lpa$/i);
+
+            const filteredJobs = allJobs.filter((job) => {
+                if (salaryRange) {
+                    const min = Number(salaryRange[1]);
+                    const max = Number(salaryRange[2]);
+                    return job.salary >= min && job.salary <= max;
+                }
+                if (salaryAbove) {
+                    const min = Number(salaryAbove[1]);
+                    return job.salary >= min;
+                }
+                return (
+                    job.title.toLowerCase().includes(query) ||
+                    job.description.toLowerCase().includes(query) ||
+                    job.location.toLowerCase().includes(query)
+                );
+            });
             setFilterJobs(filteredJobs);
         } else {
             setFilterJobs(allJobs);
