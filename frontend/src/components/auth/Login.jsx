@@ -8,7 +8,7 @@ import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUser } from '@/redux/authSlice'
+import { setUser, setToken } from '@/redux/authSlice'
 import { Loader2, Mail, Lock, Briefcase } from 'lucide-react'
 
 const Login = () => {
@@ -25,8 +25,13 @@ const Login = () => {
     if (!input.email || !input.password || !input.role) { toast.error("Please fill all fields"); return; }
     try {
       setLoading(true);
-      const res = await axios.post(`${USER_API_END_POINT}/login`, input, { headers: { "Content-Type": "application/json" }, withCredentials: true });
-      if (res.data.success) { dispatch(setUser(res.data.user)); toast.success(res.data.message); navigate("/"); }
+      const res = await axios.post(`${USER_API_END_POINT}/login`, input, { headers: { "Content-Type": "application/json" } });
+      if (res.data.success) { 
+        dispatch(setUser(res.data.user)); 
+        dispatch(setToken(res.data.token));
+        toast.success(res.data.message); 
+        navigate("/"); 
+      }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Login failed");
     } finally { setLoading(false); }

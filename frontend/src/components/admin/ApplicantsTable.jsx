@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { APPLICATION_API_END_POINT } from '@/utils/constant'
-import axios from 'axios'
+import axiosInstance from '@/utils/axiosInstance'
 import { updateApplicantStatus } from '@/redux/applicationSlice'
 
 const ApplicantsTable = () => {
@@ -14,7 +14,7 @@ const ApplicantsTable = () => {
 
     const statusHandler = async (status, id) => {
         try {
-            const res = await axios.post(`${APPLICATION_API_END_POINT}/status/${id}/update`, { status }, { withCredentials: true });
+            const res = await axiosInstance.post(`${APPLICATION_API_END_POINT}/status/${id}/update`, { status }, {});
             if (res.data.success) {
                 dispatch(updateApplicantStatus({ id, status }));
                 toast.success(res.data.message);

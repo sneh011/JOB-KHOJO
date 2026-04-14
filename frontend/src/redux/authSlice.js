@@ -4,17 +4,25 @@ const authSlice = createSlice({
     name:"auth",
     initialState:{
         loading:false,
-        user:null
+        user:null,
+        token: localStorage.getItem("token") || null
     },
     reducers:{
-        // actions
         setLoading:(state, action) => {
             state.loading = action.payload;
         },
         setUser:(state, action) => {
             state.user = action.payload;
+        },
+        setToken:(state, action) => {
+            state.token = action.payload;
+            if (action.payload) {
+                localStorage.setItem("token", action.payload);
+            } else {
+                localStorage.removeItem("token");
+            }
         }
     }
 });
-export const {setLoading, setUser} = authSlice.actions;
+export const {setLoading, setUser, setToken} = authSlice.actions;
 export default authSlice.reducer;

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import axiosInstance from '@/utils/axiosInstance';
 import { toast } from "sonner";
 import { SAVE_JOB_API_END_POINT } from "@/utils/constant";
 import { toggleSavedJob } from "@/redux/jobSlice";
@@ -13,10 +13,10 @@ const useSaveJob = (job) => {
         if (e) e.stopPropagation();
         if (!job) return;
         try {
-            const res = await axios.post(
+            const res = await axiosInstance.post(
                 `${SAVE_JOB_API_END_POINT}/saved-jobs/${job._id}`,
                 {},
-                { withCredentials: true }
+                {}
             );
             if (res.data.success) {
                 dispatch(toggleSavedJob(job));
