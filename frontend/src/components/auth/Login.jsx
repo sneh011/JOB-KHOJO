@@ -4,7 +4,7 @@ import { Input } from '../ui/input'
 import { RadioGroup } from '../ui/radio-group'
 import { Button } from '../ui/button'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '@/utils/axiosInstance'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +25,7 @@ const Login = () => {
     if (!input.email || !input.password || !input.role) { toast.error("Please fill all fields"); return; }
     try {
       setLoading(true);
-      const res = await axios.post(`${USER_API_END_POINT}/login`, input, { headers: { "Content-Type": "application/json" } });
+      const res = await axiosInstance.post(`${USER_API_END_POINT}/login`, input, { headers: { "Content-Type": "application/json" } });
       if (res.data.success) { 
         dispatch(setUser(res.data.user)); 
         dispatch(setToken(res.data.token));
@@ -37,7 +37,7 @@ const Login = () => {
     } finally { setLoading(false); }
   }
 
-  useEffect(() => { if (user) navigate("/"); }, [user]);
+  useEffect(() => { if (user) navigate("/"); }, []);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-[#f0e6ff] via-white to-[#ffe8e0] flex items-center justify-center px-4'>

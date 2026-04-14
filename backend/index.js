@@ -14,7 +14,18 @@ const app = express();
 
 // 🔥 CORS FIRST (IMPORTANT)
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: function (origin, callback) {
+    const allowed = [
+      process.env.FRONTEND_URL,
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ].filter(Boolean);
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 // middleware
