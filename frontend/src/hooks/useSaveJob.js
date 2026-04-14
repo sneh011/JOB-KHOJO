@@ -3,15 +3,23 @@ import axiosInstance from '@/utils/axiosInstance';
 import { toast } from "sonner";
 import { SAVE_JOB_API_END_POINT } from "@/utils/constant";
 import { toggleSavedJob } from "@/redux/jobSlice";
+import { useNavigate } from "react-router-dom";
 
 const useSaveJob = (job) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { savedJobs } = useSelector(store => store.job);
+    const { user } = useSelector(store => store.auth);
     const isSaved = savedJobs.some(j => j._id === job?._id);
 
     const saveHandler = async (e) => {
         if (e) e.stopPropagation();
         if (!job) return;
+        if (!user) {
+            toast.error("Please login before saving a job.");
+            navigate("/login");
+            return;
+        }
         try {
             const res = await axiosInstance.post(
                 `${SAVE_JOB_API_END_POINT}/saved-jobs/${job._id}`,

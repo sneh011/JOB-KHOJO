@@ -23,6 +23,11 @@ const JobDescription = () => {
     const navigate = useNavigate();
 
     const applyJobHandler = async () => {
+        if (!user) {
+            toast.error("Please login before applying for a job.");
+            navigate("/login");
+            return;
+        }
         try {
             const res = await axiosInstance.post(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {}, {});
             if (res.data.success) {
