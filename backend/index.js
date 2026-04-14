@@ -14,13 +14,10 @@ const app = express();
 
 // 🔥 CORS FIRST (IMPORTANT)
 app.use(cors({
-  origin: [
-    "https://job-khojo-git-main-sneh-011s-projects.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:3000"
-  ],
+  origin: true,
   credentials: true
 }));
+
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
