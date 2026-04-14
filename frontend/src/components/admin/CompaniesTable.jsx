@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '@/utils/axiosInstance'
 import { toast } from 'sonner'
 import { COMPANY_API_END_POINT } from '@/utils/constant'
 import { setCompanies } from '@/redux/companySlice'
@@ -27,7 +27,7 @@ const CompaniesTable = () => {
     const deleteHandler = async (companyId) => {
         if (!window.confirm("Delete this company? All its jobs and applications will also be removed.")) return;
         try {
-            const res = await axios.delete(`${COMPANY_API_END_POINT}/delete/${companyId}`, { withCredentials: true });
+            const res = await axiosInstance.delete(`${COMPANY_API_END_POINT}/delete/${companyId}`);
             if (res.data.success) {
                 dispatch(setCompanies(companies.filter(c => c._id !== companyId)));
                 toast.success(res.data.message);

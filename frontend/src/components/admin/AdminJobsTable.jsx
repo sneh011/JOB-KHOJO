@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Edit2, Eye, MoreHorizontal, Trash2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '@/utils/axiosInstance'
 import { toast } from 'sonner'
 import { JOB_API_END_POINT } from '@/utils/constant'
 import { setAllAdminJobs } from '@/redux/jobSlice'
@@ -27,7 +27,7 @@ const AdminJobsTable = () => {
     const deleteHandler = async (jobId) => {
         if (!window.confirm("Delete this job? All applications for it will also be removed.")) return;
         try {
-            const res = await axios.delete(`${JOB_API_END_POINT}/delete/${jobId}`, { withCredentials: true });
+            const res = await axiosInstance.delete(`${JOB_API_END_POINT}/delete/${jobId}`);
             if (res.data.success) {
                 dispatch(setAllAdminJobs(allAdminJobs.filter(j => j._id !== jobId)));
                 toast.success(res.data.message);
