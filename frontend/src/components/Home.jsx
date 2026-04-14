@@ -13,16 +13,19 @@ const Home = () => {
   const { user } = useSelector(store => store.auth);
   const navigate = useNavigate();
   useEffect(() => {
-    if (user?.role === 'recruiter') {
-      navigate("/admin/companies");
-    }
+    if (user?.role === 'recruiter') navigate("/admin/companies");
   }, []);
+
   return (
-    <div>
+    <div className='bg-[#fafafa] min-h-screen'>
       <Navbar />
       <HeroSection />
-      <CategoryCarousel />
-      <LatestJobs />
+      <div className='bg-white'>
+        <CategoryCarousel />
+      </div>
+      <div className='bg-[#f9f5ff]'>
+        <LatestJobs />
+      </div>
       <Footer />
     </div>
   )

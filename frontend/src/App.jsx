@@ -1,4 +1,3 @@
-
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Navbar from './components/shared/Navbar'
 import Login from './components/auth/Login'
@@ -15,6 +14,8 @@ import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from './components/admin/PostJob'
 import Applicants from './components/admin/Applicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
+import SavedJobs from './components/SavedJobs'
+import useGetSavedJobs from './hooks/useGetSavedJobs'
 
 
 const appRouter = createBrowserRouter([
@@ -46,6 +47,10 @@ const appRouter = createBrowserRouter([
     path: "/profile",
     element: <Profile />
   },
+  {
+    path: "/saved-jobs",
+    element: <SavedJobs />
+  },
   // admin ke liye yha se start hoga
   {
     path:"/admin/companies",
@@ -74,7 +79,7 @@ const appRouter = createBrowserRouter([
 
 ])
 function App() {
-
+  useGetSavedJobs();
   return (
     <div>
       <RouterProvider router={appRouter} />

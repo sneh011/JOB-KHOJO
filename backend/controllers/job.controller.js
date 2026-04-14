@@ -1,4 +1,6 @@
 import { Job } from "../models/job.model.js";
+import { Application } from "../models/application.model.js";
+import { User } from "../models/user.model.js";
 
 // admin post krega job
 export const postJob = async (req, res) => {
@@ -31,6 +33,7 @@ export const postJob = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Server error", success: false });
     }
 }
 // student k liye
@@ -58,6 +61,7 @@ export const getAllJobs = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Server error", success: false });
     }
 }
 // student
@@ -65,7 +69,8 @@ export const getJobById = async (req, res) => {
     try {
         const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
-            path:"applications"
+            path: "applications",
+            populate: { path: "applicant", select: "_id fullname email" }
         });
         if (!job) {
             return res.status(404).json({
@@ -76,16 +81,35 @@ export const getJobById = async (req, res) => {
         return res.status(200).json({ job, success: true });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Server error", success: false });
     }
 }
-// admin kitne job create kra hai abhi tk
+// delete job + cascade
+export const deleteJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const job = await Job.findById(jobId);
+        if (!job) return res.status(404).json({ message: "Job not found.", success: false });
+
+        // Remove all applications for this job
+        await Application.deleteMany({ job: jobId });
+
+        // Remove job from all users' savedJobs
+        await User.updateMany({ savedJobs: jobId }, { $pull: { savedJobs: jobId } });
+
+        await Job.findByIdAndDelete(jobId);
+
+        return res.status(200).json({ message: "Job deleted successfully.", success: true });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Server error", success: false });
+    }
+}
+
 export const getAdminJobs = async (req, res) => {
     try {
         const adminId = req.id;
-        const jobs = await Job.find({ created_by: adminId }).populate({
-            path:'company',
-            createdAt:-1
-        });
+        const jobs = await Job.find({ created_by: adminId }).populate('company').sort({ createdAt: -1 });
         if (!jobs) {
             return res.status(404).json({
                 message: "Jobs not found.",
@@ -98,5 +122,6 @@ export const getAdminJobs = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Server error", success: false });
     }
 }

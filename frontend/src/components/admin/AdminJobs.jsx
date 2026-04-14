@@ -1,38 +1,60 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Input } from '../ui/input'
-import { Button } from '../ui/button' 
-import { useNavigate } from 'react-router-dom' 
-import { useDispatch } from 'react-redux' 
+import { Button } from '../ui/button'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import AdminJobsTable from './AdminJobsTable'
 import useGetAllAdminJobs from '@/hooks/useGetAllAdminJobs'
 import { setSearchJobByText } from '@/redux/jobSlice'
+import { Briefcase, Plus } from 'lucide-react'
 
 const AdminJobs = () => {
-  useGetAllAdminJobs();
-  const [input, setInput] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+    useGetAllAdminJobs();
+    const [input, setInput] = useState("");
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setSearchJobByText(input));
-  }, [input]);
-  return (
-    <div>
-      <Navbar />
-      <div className='max-w-6xl mx-auto my-10'>
-        <div className='flex items-center justify-between my-5'>
-          <Input
-            className="w-fit"
-            placeholder="Filter by name, role"
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <Button onClick={() => navigate("/admin/jobs/create")}>New Jobs</Button>
+    useEffect(() => { dispatch(setSearchJobByText(input)); }, [input]);
+
+    return (
+        <div className='bg-[#f9f5ff] min-h-screen'>
+            <Navbar />
+            <div className='max-w-6xl mx-auto px-4 py-8'>
+                {/* Page Header */}
+                <div className='bg-gradient-to-r from-[#F83002] to-[#ff6b35] rounded-2xl p-6 mb-6 text-white'>
+                    <div className='flex items-center gap-3'>
+                        <div className='bg-white/20 p-2 rounded-lg'>
+                            <Briefcase className='h-6 w-6' />
+                        </div>
+                        <div>
+                            <h1 className='text-2xl font-bold'>Posted Jobs</h1>
+                            <p className='text-orange-100 text-sm'>Manage all your job postings</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Controls */}
+                <div className='bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4'>
+                    <div className='flex items-center justify-between gap-4'>
+                        <Input
+                            className="max-w-xs border-gray-200"
+                            placeholder="Search by title or company..."
+                            onChange={(e) => setInput(e.target.value)}
+                        />
+                        <Button onClick={() => navigate("/admin/jobs/create")} className='bg-[#F83002] hover:bg-[#d42a00] flex items-center gap-2'>
+                            <Plus className='h-4 w-4' /> Post New Job
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Table */}
+                <div className='bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden'>
+                    <AdminJobsTable />
+                </div>
+            </div>
         </div>
-        <AdminJobsTable />
-      </div>
-    </div>
-  )
+    )
 }
 
 export default AdminJobs
